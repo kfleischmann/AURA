@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tuberlin.aura.core.descriptors.Descriptors;
+import de.tuberlin.aura.core.memory.spi.IAllocator;
+import de.tuberlin.aura.core.memory.spi.IBufferMemoryManager;
 
 /**
  *
@@ -20,7 +22,7 @@ public final class BufferMemoryManager implements IBufferMemoryManager {
 
     public static final int BUFFER_SIZE = BufferAllocator._64K;
 
-    public static final double BUFFER_LOAD_FACTOR = 0.1;
+    public static final double BUFFER_LOAD_FACTOR = 0.01;
 
     public static final int NUM_OF_ALLOCATORS_PER_GROUP = 2;
 

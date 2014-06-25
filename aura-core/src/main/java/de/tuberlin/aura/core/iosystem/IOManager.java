@@ -19,7 +19,7 @@ import de.tuberlin.aura.core.common.utils.Pair;
 import de.tuberlin.aura.core.descriptors.Descriptors.MachineDescriptor;
 import de.tuberlin.aura.core.iosystem.IOEvents.ControlEventType;
 import de.tuberlin.aura.core.iosystem.IOEvents.ControlIOEvent;
-import de.tuberlin.aura.core.task.common.TaskExecutionManager;
+import de.tuberlin.aura.core.task.spi.ITaskExecutionManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -74,7 +74,7 @@ public final class IOManager extends EventDispatcher {
     // Constructors.
     // ---------------------------------------------------
 
-    public IOManager(final MachineDescriptor machine, final TaskExecutionManager executionManager) {
+    public IOManager(final MachineDescriptor machine, final ITaskExecutionManager executionManager) {
 
         // Event dispatcher doesn't use an own thread.
         super(true, "IOManager");
@@ -95,9 +95,11 @@ public final class IOManager extends EventDispatcher {
 
         // TODO: Make the number of thread configurable
         this.tcpInboundELG = new NioEventLoopGroup(12);
+
         this.tcpOutboundELG = new NioEventLoopGroup(12);
 
         this.localInboundELG = new LocalEventLoopGroup(2);
+
         this.localOutboundELG = new LocalEventLoopGroup(2);
 
         startNetworkConnectionSetupServer(this.machine, tcpInboundELG);
@@ -416,7 +418,7 @@ public final class IOManager extends EventDispatcher {
                         dispatchEvent(event);
 
                     } else {
-                        LOG.error("connection attempt failed: " + cf.cause().getLocalizedMessage());
+                        throw new IllegalStateException(cf.cause());
                     }
                 }
             });

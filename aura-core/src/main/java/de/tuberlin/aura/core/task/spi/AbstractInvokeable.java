@@ -1,20 +1,18 @@
-package de.tuberlin.aura.core.task.common;
-
-import java.util.UUID;
+package de.tuberlin.aura.core.task.spi;
 
 import org.slf4j.Logger;
 
-public abstract class TaskInvokeable implements TaskLifecycle {
+public abstract class AbstractInvokeable implements IExecutionLifecycle {
 
     // ---------------------------------------------------
     // Fields.
     // ---------------------------------------------------
 
-    protected final TaskDriverContext driverContext;
+    protected final ITaskDriver driver;
 
-    protected final DataProducer producer;
+    protected final IDataProducer producer;
 
-    protected final DataConsumer consumer;
+    protected final IDataConsumer consumer;
 
     protected final Logger LOG;
 
@@ -24,10 +22,10 @@ public abstract class TaskInvokeable implements TaskLifecycle {
     // Constructors.
     // ---------------------------------------------------
 
-    public TaskInvokeable(final TaskDriverContext driverContext, final DataProducer producer, final DataConsumer consumer, final Logger LOG) {
+    public AbstractInvokeable(final ITaskDriver driver, final IDataProducer producer, final IDataConsumer consumer, final Logger LOG) {
         // sanity check.
-        if (driverContext == null)
-            throw new IllegalArgumentException("driverContext == null");
+        if (driver == null)
+            throw new IllegalArgumentException("driver == null");
         if (producer == null)
             throw new IllegalArgumentException("producer == null");
         if (consumer == null)
@@ -35,7 +33,7 @@ public abstract class TaskInvokeable implements TaskLifecycle {
         if (LOG == null)
             throw new IllegalArgumentException("LOG == null");
 
-        this.driverContext = driverContext;
+        this.driver = driver;
 
         this.producer = producer;
 
@@ -44,17 +42,6 @@ public abstract class TaskInvokeable implements TaskLifecycle {
         this.LOG = LOG;
 
         this.isRunning = true;
-
-        // driverContext.taskFSM.addStateListener(TaskStates.TaskState.TASK_STATE_FINISHED,
-        // new StateMachine.FSMStateAction<TaskStates.TaskState, TaskStates.TaskTransition>() {
-        //
-        // @Override
-        // public void stateAction(TaskStates.TaskState previousState,
-        // TaskStates.TaskTransition transition,
-        // TaskStates.TaskState state) {
-        //
-        // }
-        // });
     }
 
     // ---------------------------------------------------
@@ -69,13 +56,13 @@ public abstract class TaskInvokeable implements TaskLifecycle {
 
     public void release() throws Throwable {}
 
-    public UUID getTaskID(int gateIndex, int channelIndex) {
-        return driverContext.taskBindingDescriptor.outputGateBindings.get(gateIndex).get(channelIndex).taskID;
-    }
-
     public void stopInvokeable() {
         isRunning = false;
     }
+
+    //public List<Class<?>> defineDependencies() {
+    //    return new ArrayList<>();
+    //}
 
     // ---------------------------------------------------
     // Protected Methods.

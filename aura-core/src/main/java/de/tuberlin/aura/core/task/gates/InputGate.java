@@ -9,7 +9,7 @@ import de.tuberlin.aura.core.iosystem.DataReader;
 import de.tuberlin.aura.core.iosystem.IOEvents;
 import de.tuberlin.aura.core.iosystem.IOEvents.DataIOEvent;
 import de.tuberlin.aura.core.iosystem.queues.BufferQueue;
-import de.tuberlin.aura.core.task.common.TaskDriverContext;
+import de.tuberlin.aura.core.task.spi.ITaskDriver;
 
 public final class InputGate extends AbstractGate {
 
@@ -17,7 +17,7 @@ public final class InputGate extends AbstractGate {
     // Fields.
     // ---------------------------------------------------
 
-    private DataReader channelReader;
+    private DataReader dataReader;
 
     private static final Logger LOG = LoggerFactory.getLogger(InputGate.class);
 
@@ -26,11 +26,11 @@ public final class InputGate extends AbstractGate {
     // ---------------------------------------------------
 
     /**
-     * @param context
+     * @param taskDriver
      * @param gateIndex
      */
-    public InputGate(final TaskDriverContext context, int gateIndex) {
-        super(context, gateIndex, context.taskBindingDescriptor.inputGateBindings.get(gateIndex).size());
+    public InputGate(final ITaskDriver taskDriver, int gateIndex) {
+        super(taskDriver, gateIndex, taskDriver.getBindingDescriptor().inputGateBindings.get(gateIndex).size());
     }
 
     // ---------------------------------------------------
@@ -42,11 +42,11 @@ public final class InputGate extends AbstractGate {
      */
     public void openGate() {
         for (int i = 0; i < numChannels; ++i) {
-            final UUID srcID = context.taskBindingDescriptor.inputGateBindings.get(gateIndex).get(i).taskID;
+            final UUID srcID = taskDriver.getBindingDescriptor().inputGateBindings.get(gateIndex).get(i).taskID;
 
-            final DataIOEvent event = new DataIOEvent(IOEvents.DataEventType.DATA_EVENT_OUTPUT_GATE_OPEN, srcID, context.taskDescriptor.taskID);
+            final DataIOEvent event = new DataIOEvent(IOEvents.DataEventType.DATA_EVENT_OUTPUT_GATE_OPEN, srcID, taskDriver.getNodeDescriptor().taskID);
 
-            channelReader.write(context.taskDescriptor.taskID, gateIndex, i, event);
+            dataReader.write(taskDriver.getNodeDescriptor().taskID, gateIndex, i, event);
         }
     }
 
@@ -55,32 +55,32 @@ public final class InputGate extends AbstractGate {
      */
     public void closeGate() {
         for (int i = 0; i < numChannels; ++i) {
-            final UUID srcID = context.taskBindingDescriptor.inputGateBindings.get(gateIndex).get(i).taskID;
+            final UUID srcID = taskDriver.getBindingDescriptor().inputGateBindings.get(gateIndex).get(i).taskID;
 
-            final DataIOEvent event = new DataIOEvent(IOEvents.DataEventType.DATA_EVENT_OUTPUT_GATE_CLOSE, srcID, context.taskDescriptor.taskID);
+            final DataIOEvent event = new DataIOEvent(IOEvents.DataEventType.DATA_EVENT_OUTPUT_GATE_CLOSE, srcID, taskDriver.getNodeDescriptor().taskID);
 
-            channelReader.write(context.taskDescriptor.taskID, gateIndex, i, event);
+            dataReader.write(taskDriver.getNodeDescriptor().taskID, gateIndex, i, event);
         }
     }
 
     /**
      * @return
      */
-    public BufferQueue<DataIOEvent> getInputQueue() {
-        return channelReader.getInputQueue(context.taskDescriptor.taskID, gateIndex);
+    public BufferQueue<DataIOEvent> getInputQueue(final int channelIndex) {
+        return dataReader.getInputQueue(taskDriver.getNodeDescriptor().taskID, gateIndex, channelIndex);
     }
 
     /**
-     * @param channelReader
+     * @param dataReader
      */
-    public void setChannelReader(final DataReader channelReader) {
-        this.channelReader = channelReader;
+    public void setDataReader(final DataReader dataReader) {
+        this.dataReader = dataReader;
     }
 
     /**
      * @return
      */
-    public DataReader getChannelReader() {
-        return channelReader;
+    public DataReader getDataReader() {
+        return dataReader;
     }
 }

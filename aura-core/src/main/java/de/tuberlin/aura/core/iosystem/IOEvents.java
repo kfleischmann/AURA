@@ -44,6 +44,8 @@ public final class IOEvents {
         public static final String DATA_EVENT_SOURCE_EXHAUSTED = "DATA_EVENT_SOURCE_EXHAUSTED";
 
         public static final String DATA_EVENT_SOURCE_EXHAUSTED_ACK = "DATA_EVENT_SOURCE_EXHAUSTED_ACK";
+
+        public static final String DATA_EVENT_RECORD_TYPE = "DATA_EVENT_RECORD_TYPE";
     }
 
     /**
@@ -153,8 +155,6 @@ public final class IOEvents {
         private static final long serialVersionUID = -1;
 
         public final UUID messageID;
-
-        // public final byte[] data;
 
         public final MemoryView buffer;
 
@@ -340,7 +340,4 @@ public final class IOEvents {
             this.result = result;
         }
     }
-
-    // --------------------------------------------------
-    // KRYO
 }

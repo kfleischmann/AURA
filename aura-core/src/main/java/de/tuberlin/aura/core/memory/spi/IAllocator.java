@@ -1,4 +1,7 @@
-package de.tuberlin.aura.core.memory;
+package de.tuberlin.aura.core.memory.spi;
+
+import de.tuberlin.aura.core.memory.BufferCallback;
+import de.tuberlin.aura.core.memory.MemoryView;
 
 /**
  *
@@ -18,4 +21,6 @@ public interface IAllocator {
     public abstract int getBufferSize();
 
     public abstract boolean isNotUsed();
+
+    public abstract void checkForMemoryLeaks();
 }
