@@ -6,12 +6,10 @@ import de.tuberlin.aura.core.descriptors.Descriptors;
 import de.tuberlin.aura.core.iosystem.IOEvents;
 import de.tuberlin.aura.core.memory.BufferAllocator;
 import de.tuberlin.aura.core.memory.MemoryView;
-import de.tuberlin.aura.core.task.common.DataConsumer;
-import de.tuberlin.aura.core.task.common.DataProducer;
-import de.tuberlin.aura.core.task.common.TaskDriverContext;
-import de.tuberlin.aura.core.task.common.TaskInvokeable;
-import de.tuberlin.aura.core.topology.AuraDirectedGraph;
-
+import de.tuberlin.aura.core.task.spi.AbstractInvokeable;
+import de.tuberlin.aura.core.task.spi.IDataConsumer;
+import de.tuberlin.aura.core.task.spi.IDataProducer;
+import de.tuberlin.aura.core.task.spi.ITaskDriver;
 import org.apache.hadoop.fs.*;
 import org.slf4j.Logger;
 
@@ -25,11 +23,15 @@ import org.apache.hadoop.conf.Configuration;
 
 public class HadoopIdentityClient {
 
-    public static class HdfsSink extends TaskInvokeable {
+
+
+
+    public static class HdfsSink extends AbstractInvokeable {
+
 
         long count = 0;
 
-        public HdfsSink(final TaskDriverContext context, DataProducer producer, final DataConsumer consumer, final Logger LOG) {
+		public HdfsSink(final ITaskDriver taskDriver, final IDataProducer producer, final IDataConsumer consumer, final Logger LOG) {
             super(context, producer, consumer, LOG);
         }
 

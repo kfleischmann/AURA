@@ -143,6 +143,8 @@ public final class TaskDriver extends EventDispatcher implements ITaskDriver {
 
                 invokeable = createInvokeable(invokeableClazz, this, dataProducer, dataConsumer, LOG);
 
+
+
                 if (invokeable == null) {
                     throw new IllegalStateException("invokeable == null");
                 }
