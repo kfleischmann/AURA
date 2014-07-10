@@ -23,7 +23,7 @@ import org.apache.hadoop.conf.Configuration;
 
 public class HadoopIdentityClient {
 
-
+/*
 
 
     public static class HdfsSink extends AbstractInvokeable {
@@ -102,7 +102,7 @@ public class HadoopIdentityClient {
         }
     }
 
-    public static class IdentityNode extends TaskInvokeable {
+    public static class IdentityNode extends ITaskInvokeable {
 
         public IdentityNode(TaskDriverContext driverContext, DataProducer producer, DataConsumer consumer, Logger LOG) {
             super(driverContext, producer, consumer, LOG);
@@ -359,5 +359,5 @@ public class HadoopIdentityClient {
         }
 
     }
-
+"*/
 }
