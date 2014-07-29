@@ -43,13 +43,13 @@ public class InputSplitManager {
 		}*/
 
 		// InputSplitAssigner knows about
-		final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
+		/*final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
 		nextInputSplit = inputSplitAssigner.getNextInputSplit(vertex);
 
 		if (nextInputSplit != null) {
 			this.inputSplitTracker.addInputSplitToLog(vertex, sequenceNumber, nextInputSplit);
 			LOG.info(vertex + " receives input split " + nextInputSplit.getSplitNumber());
-		}
+		}*/	 
 
 		return nextInputSplit;
 	}
