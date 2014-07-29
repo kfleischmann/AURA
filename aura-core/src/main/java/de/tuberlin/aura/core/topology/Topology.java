@@ -257,12 +257,12 @@ public class Topology {
             return this;
         }
 
-        public NodeConnector addNode(final Node node, Class<?> userCodeClazz) {
+        public NodeConnector addNode(final Node node, Class<?>... userCodeClazzes) {
             // sanity check.
             if (node == null)
                 throw new IllegalArgumentException("node == null");
-            if (userCodeClazz == null)
-                throw new IllegalArgumentException("userCodeClazz == null");
+            if (userCodeClazzes.length < 1)
+                throw new IllegalArgumentException("No user code classes given for node connector");
 
             if (nodeMap.containsKey(node.name))
                 throw new IllegalStateException("node already exists");
@@ -275,9 +275,7 @@ public class Topology {
 
             uidNodeMap.put(node.uid, node);
 
-            final List<Class<?>> userCodeClazzList = new ArrayList<>();
-
-            userCodeClazzList.add(userCodeClazz);
+            final List<Class<?>> userCodeClazzList = Arrays.asList(userCodeClazzes);
 
             userCodeClazzMap.put(node.name, userCodeClazzList);
 
@@ -1013,6 +1011,37 @@ public class Topology {
                 if (!visitedNodes.contains(n))
                     searchHelper(visitedNodes, n, goal);
             return false;
+        }
+    }
+
+    /**
+     *
+     */
+    public static final class TopologyPrinter {
+
+        // ---------------------------------------------------
+        // Constructor.
+        // ---------------------------------------------------
+
+        private TopologyPrinter() {
+        }
+
+        // ---------------------------------------------------
+        // Public Static Methods.
+        // ---------------------------------------------------
+
+        public static void printTopology(final AuraTopology topology) {
+            // sanity check.
+            if (topology == null)
+                throw new IllegalArgumentException("topology == null");
+
+            TopologyBreadthFirstTraverser.traverse(topology, new Visitor<Node>() {
+
+                @Override
+                public void visit(Node element) {
+                    System.out.println(element.name);
+                }
+            });
         }
     }
 }

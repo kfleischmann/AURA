@@ -2,6 +2,8 @@ package de.tuberlin.aura.demo.examples;
 
 import de.tuberlin.aura.client.api.AuraClient;
 import de.tuberlin.aura.client.executors.LocalClusterSimulator;
+import de.tuberlin.aura.core.config.IConfig;
+import de.tuberlin.aura.core.config.IConfigFactory;
 import de.tuberlin.aura.core.record.Partitioner;
 import de.tuberlin.aura.core.record.RowRecordReader;
 import de.tuberlin.aura.core.record.RowRecordWriter;
@@ -123,13 +125,10 @@ public class HadoopRecordReader {
 		final SimpleLayout layout = new SimpleLayout();
 		new ConsoleAppender(layout);
 
-		// Local
-		final String zookeeperAddress = "localhost:2181";
-		new LocalClusterSimulator(LocalClusterSimulator.ExecutionMode.EXECUTION_MODE_SINGLE_PROCESS, true, zookeeperAddress, 4);
-
-		final AuraClient ac = new AuraClient(zookeeperAddress, 10000, 11111);
-
+		final LocalClusterSimulator lcs = new LocalClusterSimulator(IConfigFactory.load(IConfig.Type.SIMULATOR));
+		final AuraClient ac = new AuraClient(IConfigFactory.load(IConfig.Type.CLIENT));
 		final Topology.AuraTopologyBuilder atb1 = ac.createTopologyBuilder();
+
 
 		atb1.addNode(new Topology.ComputationNode(UUID.randomUUID(), "Source", 1, 1), Arrays.asList(FileSource.class, Record1.class))
 				.connectTo("Sink", Topology.Edge.TransferType.ALL_TO_ALL)

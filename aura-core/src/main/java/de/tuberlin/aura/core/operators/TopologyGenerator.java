@@ -1,11 +1,11 @@
 package de.tuberlin.aura.core.operators;
 
-import de.tuberlin.aura.core.common.utils.Visitor;
-import de.tuberlin.aura.core.topology.Topology;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import de.tuberlin.aura.core.common.utils.Visitor;
+import de.tuberlin.aura.core.topology.Topology;
 
 /**
  *
@@ -112,7 +112,7 @@ public final class TopologyGenerator implements Visitor<OperatorAPI.Operator> {
     // ---------------------------------------------------
 
     private Topology.Edge.TransferType selectEdgeTransferType(final OperatorProperties srcOperator,
-                                                               final OperatorProperties dstOperator) {
+                                                              final OperatorProperties dstOperator) {
 
         if (Arrays.equals(srcOperator.keys, dstOperator.keys) // TODO: only subset of keys should be enough.. isPartOf()
                 && srcOperator.strategy == dstOperator.strategy) {

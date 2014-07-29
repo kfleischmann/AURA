@@ -2,17 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- ================================= -->
-    <!-- MAVEN HEADER. -->
-    <!-- ================================= -->
-
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>de.tuberlin.aura</groupId>
     <artifactId>aura</artifactId>
-    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <name>aura</name>
-    <url>http://maven.apache.org</url>
+    <packaging>pom</packaging>
+    <url>http://github.com/citlab/AURA</url>
+
+    <scm>
+        <url>https://github.com/citlab/AURA</url>
+        <connection>scm:git:git@github.com:citlab/AURA.git</connection>
+        <developerConnection>scm:git:git@github.com:citlab/AURA.git</developerConnection>
+    </scm>
+
 
     <!-- ================================= -->
     <!-- AURA PROJECT CONFIGURATION. -->
@@ -35,10 +40,13 @@
         <bcel.version>5.1</bcel.version>
         <commons-io.version>1.3.2</commons-io.version>
         <zookeeper.version>3.4.5</zookeeper.version>
+        <curator.version>2.5.0</curator.version>
         <jcip-annotations.version>1.0</jcip-annotations.version>
         <guava.version>15.0</guava.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <slf4j-log4j12.version>1.7.5</slf4j-log4j12.version>
+        <config.version>1.2.1</config.version>
+        <argparse4j.version>0.4.3</argparse4j.version>
     </properties>
 
     <!-- ================================= -->
@@ -51,7 +59,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -108,6 +116,12 @@
                 <artifactId>aura-wm</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>aura-tests</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
 
 
             <!-- SYSTEM DEPENDENCIES -->
@@ -137,6 +151,11 @@
                 <version>${zookeeper.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>net.jcip</groupId>
                 <artifactId>jcip-annotations</artifactId>
                 <version>${jcip-annotations.version}</version>
@@ -156,6 +175,16 @@
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j-log4j12.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.typesafe</groupId>
+                <artifactId>config</artifactId>
+                <version>${config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sourceforge.argparse4j</groupId>
+                <artifactId>argparse4j</artifactId>
+                <version>${argparse4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -167,7 +196,7 @@
         <pluginManagement>
             <plugins>
 
-                <!-- enable speciific JVM version -->
+                <!-- enable specific JVM version -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -201,6 +230,12 @@
                     </dependencies>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.17</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
@@ -217,6 +252,7 @@
         <module>aura-examples</module>
         <module>aura-tm</module>
         <module>aura-wm</module>
+        <module>aura-tests</module>
     </modules>
 
 </project>

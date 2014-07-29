@@ -1,5 +1,6 @@
 package de.tuberlin.aura.core.task.spi;
 
+import org.apache.hadoop.mapred.InputSplit;
 import org.slf4j.Logger;
 
 import de.tuberlin.aura.core.common.eventsystem.IEventDispatcher;
@@ -33,4 +34,6 @@ public interface ITaskDriver extends IEventDispatcher, ITaskDriverLifecycle {
     public abstract AbstractInvokeable getInvokeable();
 
     public abstract void connectDataChannel(final Descriptors.AbstractNodeDescriptor dstNodeDescriptor, final IAllocator allocator);
+
+	public InputSplit getNextInputSplit();
 }

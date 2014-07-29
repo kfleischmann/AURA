@@ -5,11 +5,11 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tuberlin.aura.computation.ExecutionPlanDriver;
-import de.tuberlin.aura.storage.DataStorageDriver;
+import org.apache.hadoop.mapred.InputSplit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tuberlin.aura.computation.ExecutionPlanDriver;
 import de.tuberlin.aura.core.common.eventsystem.EventDispatcher;
 import de.tuberlin.aura.core.common.statemachine.StateMachine;
 import de.tuberlin.aura.core.descriptors.Descriptors;
@@ -22,6 +22,7 @@ import de.tuberlin.aura.core.task.common.TaskStates.TaskTransition;
 import de.tuberlin.aura.core.task.spi.*;
 import de.tuberlin.aura.core.task.usercode.UserCode;
 import de.tuberlin.aura.core.task.usercode.UserCodeImplanter;
+import de.tuberlin.aura.storage.DataStorageDriver;
 
 /**
  *
@@ -57,11 +58,15 @@ public final class TaskDriver extends EventDispatcher implements ITaskDriver {
 
     private IAllocator outputAllocator;
 
+	private TaskInputSplitProvider inputSplitProvider;
+
     // ---------------------------------------------------
     // Constructors.
     // ---------------------------------------------------
 
-    public TaskDriver(final ITaskManager taskManager, final Descriptors.DeploymentDescriptor deploymentDescriptor) {
+    public TaskDriver(final ITaskManager taskManager,
+					  final Descriptors.DeploymentDescriptor deploymentDescriptor,
+					  final TaskInputSplitProvider inputSplitProvider ) {
         super(true, "TaskDriver-" + deploymentDescriptor.nodeDescriptor.name + "-" + deploymentDescriptor.nodeDescriptor.taskIndex
                 + "-EventDispatcher");
 
@@ -89,6 +94,8 @@ public final class TaskDriver extends EventDispatcher implements ITaskDriver {
                 QueueManager.newInstance(nodeDescriptor.taskID,
                         new BlockingSignalQueue.Factory<IOEvents.DataIOEvent>(),
                         new BlockingSignalQueue.Factory<IOEvents.DataIOEvent>());
+
+		this.inputSplitProvider = inputSplitProvider;
     }
 
     // ---------------------------------------------------
@@ -277,7 +284,11 @@ public final class TaskDriver extends EventDispatcher implements ITaskDriver {
         );
     }
 
-    @Override
+	@Override
+	public InputSplit getNextInputSplit() {
+		return this.inputSplitProvider.getNextInputSplit();
+	}
+	@Override
     public IDataProducer getDataProducer() {
         return dataProducer;
     }

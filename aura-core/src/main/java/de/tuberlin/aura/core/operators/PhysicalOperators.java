@@ -1,10 +1,9 @@
 package de.tuberlin.aura.core.operators;
 
+import java.io.Serializable;
+
 import de.tuberlin.aura.core.common.utils.Visitable;
 import de.tuberlin.aura.core.common.utils.Visitor;
-import de.tuberlin.aura.core.descriptors.Descriptors;
-
-import java.io.Serializable;
 
 /**
  *
@@ -43,10 +42,6 @@ public class PhysicalOperators {
         // ---------------------------------------------------
 
         public AbstractPhysicalOperator(final OperatorProperties properties) {
-            // sanity check.
-            //if (properties == null)
-            //    throw new IllegalArgumentException("properties == null");
-
             this.properties = properties;
         }
 
@@ -73,53 +68,6 @@ public class PhysicalOperators {
         }
     }
 
-    /**
-     *
-     * @param <O>
-     */
-    public static interface RecordFactory<O> {
-
-        public abstract O createRecord();
-    }
-
-    /**
-     *
-     * @param <O>
-     */
-    public static class DummyRecordFactory<O> implements RecordFactory<O> {
-
-        // ---------------------------------------------------
-        // Fields.
-        // ---------------------------------------------------
-
-        private final Class<?> clazz;
-
-        private int count = 10000;
-
-        // ---------------------------------------------------
-        // Constructor.
-        // ---------------------------------------------------
-
-        public DummyRecordFactory(final Class<?> clazz) {
-            this.clazz = clazz;
-        }
-
-        // ---------------------------------------------------
-        // Public Methods.
-        // ---------------------------------------------------
-
-        @Override
-        public O createRecord() {
-            try {
-                if(--count > 0)
-                    return (O) clazz.getConstructor().newInstance();
-                else
-                    return null;
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        }
-    }
 
     /**
      *
@@ -140,11 +88,6 @@ public class PhysicalOperators {
 
         protected AbstractUnaryPhysicalOperator(final OperatorProperties properties, final IPhysicalOperator<I> inputOp) {
             super(properties);
-
-            // sanity check.
-            //if (inputOp == null)
-            //    throw new IllegalArgumentException("inputOp == null");
-
             this.inputOp = inputOp;
         }
     }
@@ -214,25 +157,14 @@ public class PhysicalOperators {
      *
      * @param <O>
      */
-    public static class BaseSource<O> extends AbstractPhysicalOperator<O> {
-
-        // ---------------------------------------------------
-        // Fields.
-        // ---------------------------------------------------
-
-        private final RecordFactory<O> factory;
+    /*public static abstract class BaseSource<O> extends AbstractPhysicalOperator<O> {
 
         // ---------------------------------------------------
         // Constructor.
         // ---------------------------------------------------
 
-        public BaseSource(final OperatorProperties properties, final RecordFactory<O> factory) {
+        public BaseSource(final OperatorProperties properties) {
             super(properties);
-            // sanity check.
-            if (factory == null)
-                throw new IllegalArgumentException("factory == null");
-
-            this.factory = factory;
         }
 
         // ---------------------------------------------------
@@ -245,7 +177,7 @@ public class PhysicalOperators {
 
         @Override
         public O next() throws Throwable {
-            return factory.createRecord();
+            return null;
         }
 
         @Override
@@ -256,7 +188,7 @@ public class PhysicalOperators {
         public void accept(final Visitor<IPhysicalOperator> visitor) {
             visitor.visit(this);
         }
-    }
+    }*/
 
     /**
      *
@@ -303,7 +235,7 @@ public class PhysicalOperators {
      *
      * @param <I>
      */
-    public static class BaseSink<I> extends AbstractUnaryPhysicalOperator<I,Void> {
+    /*public static class BaseSink<I> extends AbstractUnaryPhysicalOperator<I,Void> {
 
         // ---------------------------------------------------
         // Constructor.
@@ -337,7 +269,7 @@ public class PhysicalOperators {
         public void accept(final Visitor<IPhysicalOperator> visitor) {
             visitor.visit(this);
         }
-    }
+    }*/
 
     /**
      *
@@ -363,6 +295,7 @@ public class PhysicalOperators {
 
         @Override
         public void open() throws Throwable {
+            inputOp.open();
         }
 
         @Override
@@ -375,6 +308,7 @@ public class PhysicalOperators {
 
         @Override
         public void close() throws Throwable {
+            inputOp.close();
         }
 
         @Override

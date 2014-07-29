@@ -1,10 +1,8 @@
 package de.tuberlin.aura.workloadmanager;
 
-import de.tuberlin.aura.core.iosystem.InputSplit;
-import de.tuberlin.aura.core.task.spi.ITaskExecutionUnit;
-import de.tuberlin.aura.core.topology.Topology;
+import org.apache.hadoop.mapred.InputSplit;
 
-import java.util.List;
+import java.util.UUID;
 
 public class InputSplitManager {
 
@@ -13,13 +11,9 @@ public class InputSplitManager {
 	 * Returns the next input split the input split manager (or the responsible {@link InputSplitAssigner} to be more
 	 * precise) has chosen for the given executionNode to consume.
 	 *
-	 * @param executionNode
-	 *        the executionNode for which the next input split is to be determined
-	 * @param sequenceNumber
-	 *        the sequence number of the executionNode's request
 	 * @return the next input split to consume or <code>null</code> if the executionNode shall consume no more input splits
 	 */
-	public InputSplit getNextInputSplit(final Topology.ExecutionNode executionNode, final int sequenceNumber) {
+	public InputSplit getNextInputSplit(UUID topologyID, UUID taskID, final int sequenceNumber ) {
 		InputSplit nextInputSplit = null;
 
 
@@ -32,7 +26,6 @@ public class InputSplitManager {
 		}*/
 
 
-
 		/*
 		final ExecutionGroupVertex groupVertex = vertex.getGroupVertex();
 		final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
@@ -40,7 +33,8 @@ public class InputSplitManager {
 			final JobID jobID = groupVertex.getExecutionStage().getExecutionGraph().getJobID();
 			LOG.error("Cannot find input assigner for group vertex " + groupVertex.getName() + " (job " + jobID + ")");
 			return null;
-		}*/
+		}
+		*/
 
 		// InputSplitAssigner knows about
 		/*final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
