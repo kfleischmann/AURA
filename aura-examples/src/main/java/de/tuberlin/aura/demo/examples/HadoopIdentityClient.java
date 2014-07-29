@@ -21,6 +21,19 @@ import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 
+
+
+import java.io.*;
+import java.util.*;
+import java.net.*;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.util.*;
+
+
+
 public class HadoopIdentityClient {
 
 /*
@@ -274,35 +287,31 @@ public class HadoopIdentityClient {
         int executionUnits = machines * tasksPerMaschine;
         AuraDirectedGraph.AuraTopologyBuilder atb;
 
-        // // 2 layered - point2point connection
-        atb = client.createTopologyBuilder();
-        atb.addNode(new AuraDirectedGraph.Node(UUID.randomUUID(), "hdfs", 1, 1), HdfsSource.class)
-
-                //.connectTo("hdfs", AuraDirectedGraph.Edge.TransferType.POINT_TO_POINT)
-                //.addNode(new AuraDirectedGraph.Node(UUID.randomUUID(), "identity", 1, 1), IdentityNode.class)
-
-                .connectTo("Sink", AuraDirectedGraph.Edge.TransferType.POINT_TO_POINT)
-                .addNode(new AuraDirectedGraph.Node(UUID.randomUUID(), "Sink", 1, 1), HdfsSink.class);
-
-
-        return atb.build("Job: Hdfs reader", EnumSet.of(AuraDirectedGraph.AuraTopology.MonitoringType.NO_MONITORING)) ;
-    }
-
-
-    // ---------------------------------------------------
-    // Main.
-    // ---------------------------------------------------
-    static void printAndExit(String str) {
-        System.err.println(str);
-        System.exit(1);
-    }
+        //
 
     public static void main(String[] args) throws IOException {
+		try{
+			Path pt=new Path("file:///home/kay/blaaa");
+			FileSystem fs = FileSystem.get(new Configuration());
 
-        executeHdfsOnAura(args);
+			FSDataInputStream in = fs.open(pt);
+			in.seek(5);
 
+			InputStreamReader is = new InputStreamReader(in);
+				BufferedReader br=new BufferedReader(is);
 
+			String line;
+			line=br.readLine();
+			while (line != null){
+				System.out.println(line);
+				line=br.readLine();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
     }
+
+	/*
 
     public static void test_Hdfs(String[] argd ) throws IOException  {
 

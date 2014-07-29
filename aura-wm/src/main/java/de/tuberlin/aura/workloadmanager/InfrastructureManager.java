@@ -33,7 +33,7 @@ public class InfrastructureManager extends EventDispatcher implements IInfrastru
     // Fields.
     // ---------------------------------------------------
 
-    /**
+	/**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(InfrastructureManager.class);
@@ -57,7 +57,15 @@ public class InfrastructureManager extends EventDispatcher implements IInfrastru
 
     private int machineIdx;
 
-    // ---------------------------------------------------
+	/**
+	 * Organizes the input splits
+	 */
+	private final InputSplitManager inputSplitManager;
+
+
+
+
+	// ---------------------------------------------------
     // Constructors.
     // ---------------------------------------------------
 
@@ -117,7 +125,10 @@ public class InfrastructureManager extends EventDispatcher implements IInfrastru
         } catch (InterruptedException e) {
             LOG.error("The connection to ZooKeeper was interrupted.", e);
         }
-    }
+
+
+		this.inputSplitManager = new InputSplitManager();
+	}
 
     // ---------------------------------------------------
     // Public Methods.

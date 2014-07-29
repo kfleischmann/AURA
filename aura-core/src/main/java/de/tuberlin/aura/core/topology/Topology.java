@@ -518,7 +518,7 @@ public class Topology {
     /**
      *
      */
-    public static class Node implements Visitable<Node>, Serializable {
+    public static class  Node implements Visitable<Node>, Serializable {
 
         private static final long serialVersionUID = -1L;
 

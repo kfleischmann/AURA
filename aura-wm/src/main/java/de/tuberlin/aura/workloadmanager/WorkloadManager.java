@@ -101,6 +101,7 @@ public class WorkloadManager implements ClientWMProtocol {
         });
 
         this.managerContext = new WorkloadManagerContext(this, ioManager, rpcManager, infrastructureManager);
+
     }
 
     // ---------------------------------------------------
