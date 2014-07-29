@@ -127,10 +127,12 @@ public final class TaskManager implements ITaskManager {
         ioManager.connectMessageChannelBlocking(workloadManagerMachine);
 
 
+		this.globalInputSplitProvider = rpcManager.getRPCProtocolProxy(InputSplitProviderProtocol.class, this.workloadManagerMachine );
 
-		//this.globalInputSplitProviderthis.globalInputSplitProvider = RPC.getProxy(InputSplitProviderProtocol.class, jobManagerAddress, NetUtils.getSocketFactory());
+		rpcManager.registerRPCProtocolImpl(this.globalInputSplitProvider, InputSplitProviderProtocol.class );
 
-		this.globalInputSplitProvider = null;
+		//this.globalInputSplitProvider = RPC.getProxy(InputSplitProviderProtocol.class, jobManagerAddress, NetUtils.getSocketFactory());
+
 
     }
 

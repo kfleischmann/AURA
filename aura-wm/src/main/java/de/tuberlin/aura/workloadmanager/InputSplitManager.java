@@ -2,9 +2,10 @@ package de.tuberlin.aura.workloadmanager;
 
 import org.apache.hadoop.mapred.InputSplit;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class InputSplitManager {
+public class InputSplitManager implements Serializable{
 
 
 	/**

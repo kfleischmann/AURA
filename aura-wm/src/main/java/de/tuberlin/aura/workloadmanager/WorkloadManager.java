@@ -102,6 +102,8 @@ public class WorkloadManager implements ClientWMProtocol, InputSplitProviderProt
 
         rpcManager.registerRPCProtocolImpl(this, ClientWMProtocol.class);
 
+		rpcManager.registerRPCProtocolImpl(this, InputSplitProviderProtocol.class);
+
         ioManager.addEventListener(IOEvents.ControlEventType.CONTROL_EVENT_REMOTE_TASK_STATE_UPDATE, new IEventHandler() {
 
             @Override
