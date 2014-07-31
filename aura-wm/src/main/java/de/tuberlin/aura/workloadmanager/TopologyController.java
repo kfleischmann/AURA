@@ -208,6 +208,9 @@ public final class TopologyController extends EventDispatcher {
         return topologyFSM;
     }
 
+	public AuraTopology getExecutionTopology(){
+		return topologyContainer.executingTopology;
+	}
     // ---------------------------------------------------
     // Private Methods.
     // ---------------------------------------------------

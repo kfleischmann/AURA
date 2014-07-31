@@ -140,8 +140,8 @@ public class InfrastructureManager extends EventDispatcher implements IInfrastru
         return md;
     }
 
-	public synchronized InputSplit getNextInputSplit( final UUID topologyID, final UUID taskID, final int sequenceNumber ){
-		return inputSplitManager.getNextInputSplit(topologyID, taskID, sequenceNumber );
+	public synchronized InputSplit getNextInputSplit( final Topology.ExecutionNode executionNode, final UUID topologyID, final UUID taskID, final int sequenceNumber ){
+		return inputSplitManager.getNextInputSplit(executionNode, topologyID, taskID, sequenceNumber );
 	}
 
     public synchronized int getNumberOfMachine() {

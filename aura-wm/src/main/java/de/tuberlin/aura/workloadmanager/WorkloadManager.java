@@ -344,7 +344,9 @@ public class WorkloadManager implements ClientWMProtocol, InputSplitProviderProt
 
 	@Override
 	public InputSplit requestNextInputSplit(UUID topologyID, UUID taskID, int sequenceNumber) {
-		return this.infrastructureManager.getNextInputSplit(topologyID, taskID, sequenceNumber );
+		AuraTopology topology = this.registeredTopologies.get(topologyID).getExecutionTopology();
+		Topology.ExecutionNode executionNode = topology.executionNodeMap.get(taskID);
+		return this.infrastructureManager.getNextInputSplit(executionNode, topologyID, taskID, sequenceNumber );
 	}
 
 }

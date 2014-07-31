@@ -1,5 +1,6 @@
 package de.tuberlin.aura.core.topology;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -15,6 +16,8 @@ import de.tuberlin.aura.core.task.common.TaskStates.TaskState;
 import de.tuberlin.aura.core.task.usercode.UserCode;
 import de.tuberlin.aura.core.task.usercode.UserCodeExtractor;
 import de.tuberlin.aura.core.topology.Topology.AuraTopology.DeploymentType;
+import org.apache.hadoop.mapred.InputFormat;
+import org.apache.hadoop.mapred.InputSplit;
 
 public class Topology {
 
@@ -572,6 +575,12 @@ public class Topology {
 
         public boolean isAlreadyDeployed = false;
 
+		// InputSplit handling
+
+		private InputFormat<?,?> inputFormat;
+
+		private InputSplit[] inputSplits;
+
         // ---------------------------------------------------
         // Constructors.
         // ---------------------------------------------------
@@ -699,6 +708,16 @@ public class Topology {
         public void accept(final Visitor<Node> visitor) {
             visitor.visit(this);
         }
+
+
+		public InputSplit[] getInputSplits(int numSplits) throws IOException {
+			return this.inputFormat.getSplits( null, numSplits );
+		}
+
+		public InputSplit[] getInputSplits() {
+			return inputSplits;
+		}
+
     }
 
     //---------------------------------------------------------------------------------------------------------------

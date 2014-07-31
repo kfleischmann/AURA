@@ -1,11 +1,21 @@
 package de.tuberlin.aura.workloadmanager;
 
+import de.tuberlin.aura.core.topology.Topology;
 import org.apache.hadoop.mapred.InputSplit;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 public class InputSplitManager implements Serializable{
+
+	/**
+	 * The default input split assigner which is always used if a more specific assigner cannot be found.
+	 */
+	private final InputSplitAssigner defaultAssigner = new DefaultInputSplitAssigner();
+
+
+	public InputSplitManager(){
+	}
 
 
 	/**
@@ -14,11 +24,10 @@ public class InputSplitManager implements Serializable{
 	 *
 	 * @return the next input split to consume or <code>null</code> if the executionNode shall consume no more input splits
 	 */
-	public InputSplit getNextInputSplit(UUID topologyID, UUID taskID, final int sequenceNumber ) {
+	public InputSplit getNextInputSplit(Topology.ExecutionNode executionNode, UUID topologyID, UUID taskID, final int sequenceNumber ) {
 		InputSplit nextInputSplit = null;
 
-
-		System.out.println("InputSplitManager::getNextInputSplit");
+		System.out.println("InputSplitManager::getNextInputSplit " + topologyID+", "+taskID);
 
 		/*InputSplit nextInputSplit = this.inputSplitTracker.getInputSplitFromLog(vertex, sequenceNumber);
 		if (nextInputSplit != null) {
