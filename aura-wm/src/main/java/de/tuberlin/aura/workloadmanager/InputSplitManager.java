@@ -34,27 +34,28 @@ public class InputSplitManager implements Serializable{
 			LOG.info("Input split " + nextInputSplit.getSplitNumber() + " for vertex " + vertex + " replayed from log");
 			return nextInputSplit;
 		}*/
+		final Topology.Node node = executionNode.logicalNode;
 
+		final InputSplitAssigner inputSplitAssigner = defaultAssigner; //this.assignerCache.get(groupVertex);
 
 		/*
 		final ExecutionGroupVertex groupVertex = vertex.getGroupVertex();
-		final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
 		if (inputSplitAssigner == null) {
 			final JobID jobID = groupVertex.getExecutionStage().getExecutionGraph().getJobID();
 			LOG.error("Cannot find input assigner for group vertex " + groupVertex.getName() + " (job " + jobID + ")");
 			return null;
 		}
 		*/
-
 		// InputSplitAssigner knows about
-		/*final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
-		nextInputSplit = inputSplitAssigner.getNextInputSplit(vertex);
 
+		/*
+		final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
+		*/
+		nextInputSplit = inputSplitAssigner.getNextInputSplit( executionNode );
 		if (nextInputSplit != null) {
-			this.inputSplitTracker.addInputSplitToLog(vertex, sequenceNumber, nextInputSplit);
-			LOG.info(vertex + " receives input split " + nextInputSplit.getSplitNumber());
-		}*/	 
-
+			//this.inputSplitTracker.addInputSplitToLog(vertex, sequenceNumber, nextInputSplit);
+			//LOG.info(vertex + " receives input split " + nextInputSplit.getSplitNumber());
+		}
 		return nextInputSplit;
 	}
 

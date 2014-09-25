@@ -59,7 +59,9 @@ public final class FileSystemReaderTest {
 
 		@Override
 		public void run() throws Throwable {
+
 			driver.getNextInputSplit();
+
 			for (int i = 0; i < 10000; ++i) {
 				recordWriter.writeObject(new Tuple3<>("Hans" + i, i, i));
 			}
@@ -124,7 +126,7 @@ public final class FileSystemReaderTest {
 		final Topology.AuraTopologyBuilder atb1 = ac.createTopologyBuilder();
 
 		//@formatter:off
-		atb1.addNode(new Topology.ComputationNode(UUID.randomUUID(), "Source", 1, 1), Source.class, Record1.class)
+		atb1.addNode(new Topology.ComputationNode(UUID.randomUUID(), "Source", 1, 1), Source.class, Record1.class )
 				.connectTo("Sink", Topology.Edge.TransferType.ALL_TO_ALL)
 				.addNode(new Topology.ComputationNode(UUID.randomUUID(), "Sink", 1, 1), Sink.class);
 		//@formatter:on
