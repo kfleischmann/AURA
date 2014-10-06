@@ -15,6 +15,14 @@ import de.tuberlin.aura.core.task.spi.IDataConsumer;
 import de.tuberlin.aura.core.task.spi.IDataProducer;
 import de.tuberlin.aura.core.task.spi.ITaskDriver;
 import de.tuberlin.aura.core.topology.Topology;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.InputSplit;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.apache.hadoop.util.LineReader;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.SimpleLayout;
 import org.slf4j.Logger;
@@ -43,8 +51,10 @@ public final class FileSystemReaderTest {
 	 *
 	 */
 	public static class Source extends AbstractInvokeable {
-
+		private Configuration conf;
 		private final RowRecordWriter recordWriter;
+		private LineReader in;
+		private long pos;
 
 		public Source(final ITaskDriver taskDriver, final IDataProducer producer, final IDataConsumer consumer, final Logger LOG) {
 			super(taskDriver, producer, consumer, LOG);
@@ -53,18 +63,47 @@ public final class FileSystemReaderTest {
 		}
 
 		public void open() throws Throwable {
+
 			recordWriter.begin();
+			conf = new Configuration();
+
 		}
 
+		private void initialize( InputSplit split, Configuration conf ){
+
+		}
 
 		@Override
 		public void run() throws Throwable {
 
-			driver.getNextInputSplit();
+			// request next input split from driver which forwards the request
+			// to the workload manager
+			InputSplit split = driver.getNextInputSplit();
+			/*
+			FileSplit fileSplit = (FileSplit)split;
+			Path path = fileSplit.getPath();
+
+			FileSystem fs = path.getFileSystem(conf);
+			long start = fileSplit.getStart();
+			long end = start + fileSplit.getLength();
+			boolean skipFirstLine = false;
+
+			FSDataInputStream filein = fs.open(fileSplit.getPath());
+			if (start != 0){
+				skipFirstLine = true;
+				--start;
+				filein.seek(start);
+			}
+			in = new LineReader(filein,conf);
+			if(skipFirstLine){
+				start += in.readLine(new Text(),0,(int)Math.min((long)Integer.MAX_VALUE, end - start));
+			}
+			this.pos = start;
+
 
 			for (int i = 0; i < 10000; ++i) {
 				recordWriter.writeObject(new Tuple3<>("Hans" + i, i, i));
-			}
+			}*/
 		}
 
 		@Override
@@ -102,9 +141,9 @@ public final class FileSystemReaderTest {
 					double value0 = t._2;
 					if (driver.getNodeDescriptor().taskIndex == 0) {
 						System.out.println(driver.getNodeDescriptor().taskID + " value0:" + value0);
-					}
-				}
-			}
+					}//if
+				}//if
+			}//while
 			recordReader.end();
 		}
 

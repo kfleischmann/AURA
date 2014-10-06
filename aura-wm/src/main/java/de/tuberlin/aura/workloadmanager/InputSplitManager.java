@@ -2,11 +2,13 @@ package de.tuberlin.aura.workloadmanager;
 
 import de.tuberlin.aura.core.topology.Topology;
 import org.apache.hadoop.mapred.InputSplit;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 public class InputSplitManager implements Serializable{
+	private static final Logger LOG = Logger.getLogger(InputSplitManager.class);
 
 	/**
 	 * The default input split assigner which is always used if a more specific assigner cannot be found.
@@ -27,30 +29,36 @@ public class InputSplitManager implements Serializable{
 	public InputSplit getNextInputSplit(Topology.ExecutionNode executionNode, UUID topologyID, UUID taskID, final int sequenceNumber ) {
 		InputSplit nextInputSplit = null;
 
+
 		System.out.println("InputSplitManager::getNextInputSplit " + topologyID+", "+taskID);
 
 		/*InputSplit nextInputSplit = this.inputSplitTracker.getInputSplitFromLog(vertex, sequenceNumber);
 		if (nextInputSplit != null) {
 			LOG.info("Input split " + nextInputSplit.getSplitNumber() + " for vertex " + vertex + " replayed from log");
 			return nextInputSplit;
-		}*/
-		final Topology.Node node = executionNode.logicalNode;
+		}
 
-		final InputSplitAssigner inputSplitAssigner = defaultAssigner; //this.assignerCache.get(groupVertex);
-
-		/*
+		//this.assignerCache.get(groupVertex);
 		final ExecutionGroupVertex groupVertex = vertex.getGroupVertex();
 		if (inputSplitAssigner == null) {
 			final JobID jobID = groupVertex.getExecutionStage().getExecutionGraph().getJobID();
 			LOG.error("Cannot find input assigner for group vertex " + groupVertex.getName() + " (job " + jobID + ")");
 			return null;
 		}
-		*/
 		// InputSplitAssigner knows about
 
-		/*
 		final InputSplitAssigner inputSplitAssigner = this.assignerCache.get(groupVertex);
 		*/
+
+
+
+		// find logical node from execution Node
+		final Topology.Node node = executionNode.logicalNode;
+
+		// lets say we have one input split assigner which coordinates the input splits
+		final InputSplitAssigner inputSplitAssigner = defaultAssigner;
+
+		// find the next input split for the execution node
 		nextInputSplit = inputSplitAssigner.getNextInputSplit( executionNode );
 		if (nextInputSplit != null) {
 			//this.inputSplitTracker.addInputSplitToLog(vertex, sequenceNumber, nextInputSplit);

@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * This is the default implementation of the {@link InputSplitAssigner} interface. The default input split assigner
  * simply returns all input splits of an input vertex in the order they were originally computed. The default input
- * split assigner is always used when a more specific {@link InputSplitAssigned} could not be found.
+ * split assigner is always used when a more specific {@link InputSplitAssigner} could not be found.
  * <p>
  * This class is thread-safe.
  * 
@@ -34,6 +34,7 @@ public class DefaultInputSplitAssigner implements InputSplitAssigner {
 		final InputSplit[] inputSplits = node.getInputSplits();
 
 		if (inputSplits == null) {
+			LOG.info("");
 			return;
 		}
 
@@ -60,9 +61,13 @@ public class DefaultInputSplitAssigner implements InputSplitAssigner {
 	@Override
 	public InputSplit getNextInputSplit(final Topology.ExecutionNode executionNode) {
 
+		System.out.println("DefaultInputSplitAssinger::getNextInputSplit");
+		// get input splits from logical node
+
 		final Queue<InputSplit> queue = this.splitMap.get(executionNode.logicalNode);
 
 		if (queue == null) {
+			System.out.println("no input split found");
 			//final JobID jobID = executionNode.getExecutionGraph().getJobID();
 			//LOG.error("Cannot find split queue for vertex " + vertex.getGroupVertex() + " (job " + jobID + ")");
 			return null;
