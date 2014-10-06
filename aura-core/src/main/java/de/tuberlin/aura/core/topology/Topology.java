@@ -577,7 +577,16 @@ public class Topology {
 
 		// InputSplit handling
 
+		// this is only important for hdfs source nodes
+		// initial: the source logical node is configured by the
+		// an InputFormat (HDFS) this is important for the
+		// input-split computation (this happends before the scheduling)
 		private InputFormat<?,?> inputFormat;
+
+		// before the logical node is deployed as execution units
+		// the schedule should runs over each node an forces an computation
+		// of the input splits. The input splits is requested by
+		// all the individual execution-units.
 
 		private InputSplit[] inputSplits;
 
@@ -715,7 +724,19 @@ public class Topology {
 		}
 
 		public InputSplit[] getInputSplits() {
+
+			// compute input splits from InputFormat
+			if(inputSplits==null){
+				inputSplits = computeInputSplits();
+			}
+
 			return inputSplits;
+		}
+
+
+		public InputSplit[] computeInputSplits(){
+
+			return null;
 		}
 
     }
